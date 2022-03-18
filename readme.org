@@ -1,0 +1,10 @@
+* About
+This repository contains self contained examples along with the draft ~NEP~ for
+Fortran Derived Types. Changes to the text of the draft ~nep_draft.rst~ should
+ideally be accompanied by examples (and instructions to run them).
+
+For details on the NEP process consult the [[https://numpy.org/neps/nep-0000.html][NumPy documentation]].
+
+** FAQ
+*** Why a repo?
+Large parts of this NEP involve Fortran-C-CPython binding strategies, but implementations within NumPy will require F2PY changes. This does not make for very intuitive PRs and so the design is discussed here before examples are implemented within F2PY.
