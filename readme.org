@@ -11,6 +11,16 @@ All contributions are welcome.
 - Thoughts / comments / ideas --> as review comments or issues
 - Edge cases / examples --> ~examples~ folder
 
+*** Writing bindings
+For each example, bindings should utilize the FortranObject files (a copy of
+which are provided within this repository).
+
 ** FAQ
 *** Why a repo?
 Large parts of this NEP involve Fortran-C-CPython binding strategies, but implementations within NumPy will require F2PY changes. This does not make for very intuitive PRs and so the design is discussed here before examples are implemented within F2PY.
+
+Essentially, each decision can be split into:
+1. Testing / discussing the ~C~ code
+2. Generating the ~C~ code with F2PY
+
+This repository is meant to facilitate 1. while PRs to ~numpy/numpy~ must implement both.
