@@ -67,6 +67,30 @@ Record Types
 
    These bindings have a reference implementation in `PR 20770`_
 
+As defined by the Fortran 2003 standard, a derived type with the ``bind(c)``
+attribute:
+
+.. code-block:: fortran
+
+   type, bind(c) :: cartesian
+    real(c_float) :: x, y, z
+   end type cartesian
+
+is considered to be exactly equivalent to:
+
+.. code-block:: c
+
+    struct cartesian {
+        float x, y, z;
+    }
+
+F2PY will ensure that this structure is equivalent to a Python dictionary:
+
+.. code-block:: python
+
+    a = {'x': 0, 'y': 1, 'z': 2}
+
+
 ******************************************************************************
 Implementation
 ******************************************************************************
