@@ -1,0 +1,12 @@
+* About
+This is meant to demonstrate the implementation of a simple derived type which
+is ~bind(c)~ compatible in the form of a dictionary.
+
+See [[https://rgoswami.me/posts/cython-derivedtype-f2py/#python-c-and-fortran][this post for more details]].
+
+** Usage
+#+begin_src bash
+meson setup bbdir
+meson compile -C bbdir
+python -c "import eucli; A=eucli.unitinc({'x':3.3,'y':5.2,'z':2.6}); print(A)"
+#+end_src
