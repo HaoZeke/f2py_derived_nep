@@ -8,5 +8,7 @@ See [[https://rgoswami.me/posts/cython-derivedtype-f2py/#python-c-and-fortran][t
 #+begin_src bash
 meson setup bbdir
 meson compile -C bbdir
-python -c "import eucli; A=eucli.unitinc({'x':3.3,'y':5.2,'z':2.6}); print(A)"
+python -c "import bbdir.eucli as eucli; A=eucli.unitinc({'x':3.3,'y':5.2,'z':2.6}); print(A)"
+ Modifying derived type
+{'x': 4.3, 'y': 6.2, 'z': 3.6}
 #+end_src
