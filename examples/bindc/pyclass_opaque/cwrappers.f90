@@ -76,4 +76,19 @@ contains
       p_cptr = c_null_ptr
    end subroutine c_delete_point
 
+   ! Wrapper to call the type-bound procedure euclidean_distance
+   ! TST: Check this in Fortran too
+   function c_euclidean_distance(this_cptr, other_cptr) bind(c) result(y)
+      type(c_ptr), value :: this_cptr, other_cptr
+      real(c_double) :: y
+      type(Point), pointer :: p1, p2
+
+      ! Convert C pointers to Fortran pointers
+      call c_f_pointer(this_cptr, p1)
+      call c_f_pointer(other_cptr, p2)
+
+      ! Now you can use the type-bound procedure
+      y = p1%euclidean_distance(p2)
+   end function c_euclidean_distance
+
 end module c_wrappers
