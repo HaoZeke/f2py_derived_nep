@@ -1,0 +1,28 @@
+* About
+This is meant to demonstrate the implementation of a simple derived type which
+is ~bind(c)~ compatible in the form of a new type. This implementation is in
+theory not strongly linked to the implementation within Fortran, and might
+eventually be used for regular Fortran types.
+
+However, this is complicated enough to work in two stages. First there is a
+basic implementation in C-Python in the ~cpython~ folder. Followed by a fortran
+implementation, which will then be mapped into a Python implementaiton.
+
+** Usage
+#+begin_src bash
+meson setup bbdir
+meson compile -C bbdir
+python -c "import bbdir.pycart as pycart; aak = pycart.pycart(1,10,2); print(aak); aak.unitstep(); print(aak)"
+pycart(x: 1.000000, y: 10.000000, z: 2.000000)
+ Modifying derived type
+pycart(x: 2.000000, y: 11.000000, z: 3.000000)
+#+end_src
+
+Look into generating a wrapper in Fortran which would then be manipulated via pointers on the C side.
+
+*** Tasks
+- What about other compilers?
+- Look at approaches for non-bind(c) variants
+- Extend the Python members with a pointer to the object
+  - Without ~bind(c)~
+- Allocate memory and use pointers with ~bind(c)~ as well

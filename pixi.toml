@@ -1,0 +1,14 @@
+[project]
+name = "f2py_derived_nep"
+version = "0.1.0"
+description = "Add a short description here"
+authors = ["Rohit Goswami <rog32@hi.is>"]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[tasks]
+
+[dependencies]
+fprettify = "0.3.7.*"
+meson = "1.2.3.*"
+ninja = "1.11.1.*"
