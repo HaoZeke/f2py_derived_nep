@@ -10,29 +10,39 @@ extern double c_get_x(void **p);
 extern void c_set_x(void **p, double x);
 extern double c_get_y(void **p);
 extern void c_set_y(void **p, double y);
+extern double c_euclidean_distance(void *p1, void *p2);
 
 int main() {
-  // Create a new point using the Fortran function
-  void *point = c_new_point(3.0, 4.0);
-  if (point == NULL) {
-    fprintf(stderr, "Failed to create point\n");
+  /* Create a new point using the Fortran function */
+  void *pt = c_new_point(1.0, 2.0);
+  if (pt == NULL) {
+    fprintf(stderr, "Failed to create pt\n");
     return 1;
   }
+  void *pt2 = c_new_point(2.0, 5.0);
+  if (pt2 == NULL) {
+    fprintf(stderr, "Failed to create pt2\n");
+    return 1;
+  }
+  /* Calculate the euclidean distance between pt and pt2 */
+  double edist = c_euclidean_distance(pt, pt2);
+  printf("Euclidean distance between pt and pt2: %f\n", edist);
   /* Retrieve the x and y values using the Fortran function */
-  double x = c_get_x(&point);
-  double y = c_get_y(&point);
+  double x = c_get_x(&pt);
+  double y = c_get_y(&pt);
 
-  printf("Point coordinates: x = %f, y = %f\n", x, y);
+  printf("Pt coordinates: x = %f, y = %f\n", x, y);
 
   /* Set the x and y values using the Fortran function */
-  c_set_x(&point, 5.0);
-  c_set_y(&point, 6.0);
+  c_set_x(&pt, 5.0);
+  c_set_y(&pt, 6.0);
 
-  printf("Point coordinates after set: x = %f, y = %f\n", c_get_x(&point),
-         c_get_y(&point));
+  printf("Pt coordinates after set: x = %f, y = %f\n", c_get_x(&pt),
+         c_get_y(&pt));
 
-  // Clean up and delete the point using the Fortran function
-  c_delete_point(&point);
+  /* Clean up and delete the pt using the Fortran function */
+  c_delete_point(&pt);
+  c_delete_point(&pt2);
 
   return 0;
 }
