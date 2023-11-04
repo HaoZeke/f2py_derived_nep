@@ -4,10 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// In Fortran
-extern void *c_new_point(float x, float y);
-extern void c_set_x(void *p, float x);
-extern float c_get_x(void *p);
-extern void c_delete_point(void *p);
+/* In Fortran */
+extern void *c_new_point(double x, double y);
+extern void c_delete_point(void **point);
+extern double c_get_x(void *point);
+extern void c_set_x(void *point, double x);
+extern double c_get_y(void *point);
+extern void c_set_y(void *point, double y);
 
-#endif // VECF_H_
+
+#endif

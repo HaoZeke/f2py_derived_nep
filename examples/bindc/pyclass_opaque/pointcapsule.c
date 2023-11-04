@@ -4,20 +4,9 @@
 #endif /* PY_SSIZE_T_CLEAN */
 
 #include "Python.h"
+#include "point.h"
 #include "structmember.h"
-/* #include "point.h" */
 
-#include <Python.h>
-
-// Forward declarations for the Fortran functions
-extern void *c_new_point(double x, double y);
-extern void c_delete_point(void **point);
-extern double c_get_x(void *point);
-extern void c_set_x(void *point, double x);
-extern double c_get_y(void *point);
-extern void c_set_y(void *point, double y);
-
-// Destructor for the Python capsule
 void point_capsule_destructor(PyObject *capsule) {
   void *point = PyCapsule_GetPointer(capsule, "point._Point");
   if (point) {
@@ -25,15 +14,14 @@ void point_capsule_destructor(PyObject *capsule) {
   }
 }
 
-// Point object definition
+/* Point object definition */
 typedef struct {
-  PyObject_HEAD PyObject *capsule; // Capsule containing the Point pointer
+  PyObject_HEAD PyObject *capsule;
 } PyPointObject;
 
-// Deallocates the PyPointObject
+/* Deallocates the PyPointObject */
 static void PyPoint_dealloc(PyPointObject *self) {
-  Py_XDECREF(
-      self->capsule); // This will trigger the destructor if refcount reaches 0
+  Py_XDECREF(self->capsule);
   Py_TYPE(self)->tp_free((PyObject *)self);
 }
 
@@ -55,8 +43,7 @@ static PyObject *PyPoint_new(PyTypeObject *type, PyObject *args,
     self->capsule =
         PyCapsule_New(point, "point._Point", point_capsule_destructor);
     if (self->capsule == NULL) {
-      c_delete_point(
-          &point); // Clean up Fortran point since capsule creation failed
+      c_delete_point(&point);
       Py_DECREF(self);
       return NULL;
     }
@@ -64,14 +51,14 @@ static PyObject *PyPoint_new(PyTypeObject *type, PyObject *args,
   return (PyObject *)self;
 }
 
-// Getter for the 'x' attribute
+/* Getter for the 'x' attribute */
 static PyObject *PyPoint_getx(PyPointObject *self, void *closure) {
   void *point = PyCapsule_GetPointer(self->capsule, "point._Point");
   double x = c_get_x(&point);
   return PyFloat_FromDouble(x);
 }
 
-// Setter for the 'x' attribute
+/* Setter for the 'x' attribute */
 static int PyPoint_setx(PyPointObject *self, PyObject *value, void *closure) {
   if (value == NULL) {
     PyErr_SetString(PyExc_TypeError, "Cannot delete the x attribute");
@@ -87,14 +74,14 @@ static int PyPoint_setx(PyPointObject *self, PyObject *value, void *closure) {
   return 0;
 }
 
-// Getter for the 'y' attribute
+/* Getter for the 'y' attribute */
 static PyObject *PyPoint_gety(PyPointObject *self, void *closure) {
   void *point = PyCapsule_GetPointer(self->capsule, "point._Point");
   double y = c_get_y(&point);
   return PyFloat_FromDouble(y);
 }
 
-// Setter for the 'y' attribute
+/* Setter for the 'y' attribute */
 static int PyPoint_sety(PyPointObject *self, PyObject *value, void *closure) {
   if (value == NULL) {
     PyErr_SetString(PyExc_TypeError, "Cannot delete the y attribute");
@@ -110,14 +97,14 @@ static int PyPoint_sety(PyPointObject *self, PyObject *value, void *closure) {
   return 0;
 }
 
-// Define the properties of the Point type
+/* Define the properties of the Point type */
 static PyGetSetDef PyPoint_getseters[] = {
     {"x", (getter)PyPoint_getx, (setter)PyPoint_setx, "x coordinate", NULL},
     {"y", (getter)PyPoint_gety, (setter)PyPoint_sety, "y coordinate", NULL},
     {NULL} /* Sentinel */
 };
 
-// Initializes the PyPointType object
+/* Initializes the PyPointType object */
 static PyTypeObject PyPointType = {
     PyVarObject_HEAD_INIT(NULL, 0).tp_name = "point.Point",
     .tp_doc = "Point objects",
@@ -127,16 +114,13 @@ static PyTypeObject PyPointType = {
     .tp_new = PyPoint_new,
     .tp_dealloc = (destructor)PyPoint_dealloc,
     .tp_getset = PyPoint_getseters,
-    // Additional fields can be filled in as needed
 };
 
-// Define the methods of the module if there are any
 static PyMethodDef point_methods[] = {
-    // Methods can be added here if needed
     {NULL, NULL, 0, NULL} /* Sentinel */
 };
 
-// Initializes the point module
+/* Initializes the point module */
 static PyModuleDef pointmodule = {
     PyModuleDef_HEAD_INIT,
     .m_name = "point",
