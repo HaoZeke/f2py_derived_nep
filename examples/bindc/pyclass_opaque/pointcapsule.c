@@ -106,11 +106,17 @@ static PyObject *PyPoint_euclidean_distance(PyPointObject *self,
     return NULL;
   }
 
-  // Check if 'other' is of the same type as 'self'
-  /* if (!PyObject_IsInstance(other, (PyObject *)&PyPointType)) { */
-  /*   PyErr_SetString(PyExc_TypeError, "Argument must be a Point instance"); */
-  /*   return NULL; */
-  /* } */
+  // Check if 'other' is a PyPointObject instance by comparing type names
+  if (strcmp(other->ob_type->tp_name, "point.Point") != 0) {
+    PyErr_SetString(PyExc_TypeError, "Argument must be a Point instance");
+    return NULL;
+  }
+
+  // Ensure 'other' is a capsule before getting the pointer
+  if (!PyCapsule_CheckExact(((PyPointObject *)other)->capsule)) {
+    PyErr_SetString(PyExc_TypeError, "Argument is not a Point capsule");
+    return NULL;
+  }
 
   void *self_point = PyCapsule_GetPointer(self->capsule, "point._Point");
   void *other_point =
