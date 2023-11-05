@@ -10,19 +10,12 @@ implementation, which will then be mapped into a Python implementaiton.
 
 ** Usage
 #+begin_src bash
+pixi shell
 meson setup bbdir
 meson compile -C bbdir
-python -c "import bbdir.pycart as pycart; aak = pycart.pycart(1,10,2); print(aak); aak.unitstep(); print(aak)"
-pycart(x: 1.000000, y: 10.000000, z: 2.000000)
- Modifying derived type
-pycart(x: 2.000000, y: 11.000000, z: 3.000000)
+export PYTHONPATH=$PYTHONPATH:$(pwd)/bbdir
+pytest
+./bbdir/ctestf
+./bbdir/ftest
+./bbdir/ftest_cwrap
 #+end_src
-
-Look into generating a wrapper in Fortran which would then be manipulated via pointers on the C side.
-
-*** Tasks
-- What about other compilers?
-- Look at approaches for non-bind(c) variants
-- Extend the Python members with a pointer to the object
-  - Without ~bind(c)~
-- Allocate memory and use pointers with ~bind(c)~ as well

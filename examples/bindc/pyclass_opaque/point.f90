@@ -4,6 +4,8 @@ module point_module
    type :: Point
       real(8) :: x
       real(8) :: y
+   contains
+      procedure :: euclidean_distance
    end type Point
 
 contains
@@ -56,6 +58,11 @@ contains
 
       p%y = y
    end subroutine set_y
+
+   real(8) function euclidean_distance(this, other) result(distance)
+      class(Point), intent(in) :: this, other
+      distance = sqrt((this%x - other%x)**2 + (this%y - other%y)**2)
+   end function euclidean_distance
 
    ! Additional subroutines for move_point, etc. would go here.
 

@@ -16,7 +16,8 @@ void point_capsule_destructor(PyObject *capsule) {
 
 /* Point object definition */
 typedef struct {
-  PyObject_HEAD PyObject *capsule;
+  PyObject_HEAD /* Don't move */
+      PyObject *capsule;
 } PyPointObject;
 
 /* Deallocates the PyPointObject */
@@ -97,6 +98,46 @@ static int PyPoint_sety(PyPointObject *self, PyObject *value, void *closure) {
   return 0;
 }
 
+/* Function to calculate distance between two PyPointObjects */
+static PyObject *PyPoint_euclidean_distance(PyPointObject *self,
+                                            PyObject *args) {
+  PyObject *other;
+  if (!PyArg_ParseTuple(args, "O", &other)) {
+    return NULL;
+  }
+
+  // Check if 'other' is a PyPointObject instance by comparing type names
+  if (strcmp(other->ob_type->tp_name, "point.Point") != 0) {
+    PyErr_SetString(PyExc_TypeError, "Argument must be a Point instance");
+    return NULL;
+  }
+
+  // Ensure 'other' is a capsule before getting the pointer
+  if (!PyCapsule_CheckExact(((PyPointObject *)other)->capsule)) {
+    PyErr_SetString(PyExc_TypeError, "Argument is not a Point capsule");
+    return NULL;
+  }
+
+  void *self_point = PyCapsule_GetPointer(self->capsule, "point._Point");
+  void *other_point =
+      PyCapsule_GetPointer(((PyPointObject *)other)->capsule, "point._Point");
+
+  if (!self_point || !other_point) {
+    PyErr_SetString(PyExc_RuntimeError, "Failed to get Point from capsule");
+    return NULL;
+  }
+
+  double distance = c_euclidean_distance(self_point, other_point);
+  return PyFloat_FromDouble(distance);
+}
+
+/* Define the methods */
+static PyMethodDef point_methods[] = {
+    {"euclidean_distance", (PyCFunction)PyPoint_euclidean_distance,
+     METH_VARARGS, "Calculate the Euclidean distance to another Point"},
+    {NULL, NULL, 0, NULL} /* Sentinel */
+};
+
 /* Define the properties of the Point type */
 static PyGetSetDef PyPoint_getseters[] = {
     {"x", (getter)PyPoint_getx, (setter)PyPoint_setx, "x coordinate", NULL},
@@ -114,11 +155,7 @@ static PyTypeObject PyPointType = {
     .tp_new = PyPoint_new,
     .tp_dealloc = (destructor)PyPoint_dealloc,
     .tp_getset = PyPoint_getseters,
-};
-
-static PyMethodDef point_methods[] = {
-    {NULL, NULL, 0, NULL} /* Sentinel */
-};
+    .tp_methods = point_methods};
 
 /* Initializes the point module */
 static PyModuleDef pointmodule = {
