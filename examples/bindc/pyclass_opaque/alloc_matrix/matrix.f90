@@ -4,33 +4,36 @@ module matrix_mod
   type :: matrix_type
     integer :: rows
     integer :: cols
-    real, allocatable :: data(:,:)
+    real(8), allocatable :: data(:,:)
   end type matrix_type
 
 contains
 
-  subroutine create_matrix(m, rows, cols)
-    type(matrix_type), intent(out) :: m
-    integer, intent(in) :: rows, cols
-
-    m%rows = rows
-    m%cols = cols
-    allocate(m%data(rows, cols))
+  subroutine create_matrix(m, rows, cols, alloc_stat)
+      type(matrix_type), pointer :: m
+      integer, intent(in) :: rows, cols
+      integer, intent(out), optional :: alloc_stat
+      allocate(m)
+      m%rows = rows
+      m%cols = cols
+      allocate(m%data(rows, cols))
   end subroutine create_matrix
 
   subroutine destroy_matrix(m)
-    type(matrix_type), intent(inout) :: m
+    type(matrix_type), pointer :: m
     if (allocated(m%data)) then
       deallocate(m%data)
     endif
-    m%rows = 0
-    m%cols = 0
+    if (associated(m)) then
+      deallocate(m)
+      m => null()  ! Nullify the pointer
+    endif
   end subroutine destroy_matrix
 
   subroutine set_row(m, row, rowData)
     type(matrix_type), intent(inout) :: m
     integer, intent(in) :: row
-    real, intent(in) :: rowData(:)
+    real(8), intent(in) :: rowData(:)
 
     if (row < 1 .or. row > m%rows) then
       print *, "Error: Row index out of bounds."
@@ -48,7 +51,7 @@ contains
   subroutine get_row(m, row, rowData)
     type(matrix_type), intent(in) :: m
     integer, intent(in) :: row
-    real, intent(out) :: rowData(:)
+    real(8), intent(out) :: rowData(:)
 
     if (row < 1 .or. row > m%rows) then
       print *, "Error: Row index out of bounds."
@@ -66,7 +69,7 @@ contains
   subroutine set_column(m, col, colData)
     type(matrix_type), intent(inout) :: m
     integer, intent(in) :: col
-    real, intent(in) :: colData(:)
+    real(8), intent(in) :: colData(:)
 
     if (col < 1 .or. col > m%cols) then
       print *, "Error: Column index out of bounds."
@@ -84,7 +87,7 @@ contains
   subroutine get_column(m, col, colData)
     type(matrix_type), intent(in) :: m
     integer, intent(in) :: col
-    real, intent(out) :: colData(:)
+    real(8), intent(out) :: colData(:)
 
     if (col < 1 .or. col > m%cols) then
       print *, "Error: Column index out of bounds."

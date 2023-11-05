@@ -2,9 +2,9 @@ program test_matrix
   use matrix_mod
   implicit none
 
-  type(matrix_type) :: mat
-  real, allocatable :: row_data(:), col_data(:)
-  integer :: i
+  type(matrix_type), pointer :: mat
+  real(8), allocatable :: row_data(:), col_data(:)
+  integer :: i, alloc_status
 
   ! Create a 3x3 matrix
   call create_matrix(mat, 3, 3)
