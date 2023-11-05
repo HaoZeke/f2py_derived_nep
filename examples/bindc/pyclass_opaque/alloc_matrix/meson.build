@@ -15,7 +15,6 @@ message(py3.get_install_dir())
 # py3.extension_module('point',
 #            'matrix.f90',
 #            'cwrappers.f90',
-#            # 'point.c',
 #            'pointcapsule.c',
 #            dependencies : py3_dep,
 #            install : true)
@@ -25,11 +24,11 @@ executable('ftest',
            'matrix.f90',
            install : true)
 
-# executable('ftest_cwrap',
-#            'f_cwrapper_test.f90',
-#            'matrix.f90',
-#            'cwrappers.f90',
-#            install : true)
+executable('ftest_cwrap',
+           'f_cwrapper_test.f90',
+           'matrix.f90',
+           'cwrappers.f90',
+           install : true)
 
 # executable('ctestf',
 #            'testc.c',
