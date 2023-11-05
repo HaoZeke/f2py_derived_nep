@@ -11,6 +11,7 @@ extern double c_get_x(void *point);
 extern void c_set_x(void *point, double x);
 extern double c_get_y(void *point);
 extern void c_set_y(void *point, double y);
+extern double c_euclidean_distance(void *p1, void *p2);
 
 
 #endif
