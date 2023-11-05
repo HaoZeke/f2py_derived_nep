@@ -4,18 +4,19 @@ is ~bind(c)~ compatible in the form of a new type. This implementation is in
 theory not strongly linked to the implementation within Fortran, and might
 eventually be used for regular Fortran types.
 
-However, this is complicated enough to work in two stages. First there is a
-basic implementation in C-Python in the ~cpython~ folder. Followed by a fortran
-implementation, which will then be mapped into a Python implementaiton.
+However, this is complicated enough to work in multiple stages. In order of
+implementation:
 
-** Usage
-#+begin_src bash
-pixi shell
-meson setup bbdir
-meson compile -C bbdir
-export PYTHONPATH=$PYTHONPATH:$(pwd)/bbdir
-pytest
-./bbdir/ctestf
-./bbdir/ftest
-./bbdir/ftest_cwrap
-#+end_src
+0. Basic C-Python trial with ~PyCapsules~ (in ~cpython~)
+1. Simple derived types (almost ~bind(c)~)
+2. Derived types with type bound proceedures (in ~tb_proc~)
+3. Derived types with arrays of data
+4. Arrays of derived types
+5. Derived types containing derived types
+6. Derived types with inheritance
+
+For each implementation, the steps are:
+- Implement and test the Fortran type
+- Implement and test the Fortran ISOC wrapper
+- Implement and test C calling code
+- Implement and test a Python module
