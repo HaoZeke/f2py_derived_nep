@@ -12,3 +12,6 @@ platforms = ["linux-64"]
 fprettify = "0.3.7.*"
 meson = "1.2.3.*"
 ninja = "1.11.1.*"
+numpy = "1.26.0.*"
+ipython = "8.17.2.*"
+pytest = "7.4.3.*"
