@@ -19,16 +19,19 @@ message(py3.get_install_dir())
 #            dependencies : py3_dep,
 #            install : true)
 
-executable('ftest',
-           'ftest.f90',
-           'matrix.f90',
-           install : true)
-
-executable('ftest_cwrap',
-           'f_cwrapper_test.f90',
-           'matrix.f90',
-           'cwrappers.f90',
-           install : true)
+test_array = [#
+  ['Pure fortran test', 'ftest',
+   [ 'ftest.f90', 'matrix.f90' ]],
+  ['Fortran ISO_C_BINDING test', 'ftest_cwrap',
+   [ 'f_cwrapper_test.f90', 'matrix.f90', 'cwrappers.f90' ]],
+]
+foreach test : test_array
+  test(test.get(0),
+       executable(test.get(1),
+          sources : test.get(2),
+                 ),
+      )
+endforeach
 
 # executable('ctestf',
 #            'testc.c',
