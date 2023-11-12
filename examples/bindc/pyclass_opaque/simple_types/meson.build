@@ -15,24 +15,20 @@ message(py3.get_install_dir())
 py3.extension_module('point',
            'point.f90',
            'cwrappers.f90',
-           # 'point.c',
            'pointcapsule.c',
            dependencies : py3_dep,
            install : true)
 
 executable('ftest',
            'ftest.f90',
-           'point.f90',
-           install : true)
+           'point.f90')
 
 executable('ftest_cwrap',
            'f_cwrapper_test.f90',
            'point.f90',
-           'cwrappers.f90',
-           install : true)
+           'cwrappers.f90')
 
 executable('ctestf',
            'testc.c',
            'point.f90',
-           'cwrappers.f90',
-           install : true)
+           'cwrappers.f90')

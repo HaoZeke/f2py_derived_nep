@@ -25,7 +25,7 @@ contains
       type(Point), pointer :: p
       if (associated(p)) then
          deallocate (p)
-         p => null()  ! This line nullifies the Fortran pointer
+         p => null()
       end if
    end subroutine destroy_point
 
@@ -56,7 +56,5 @@ contains
 
       p%y = y
    end subroutine set_y
-
-   ! Additional subroutines for move_point, etc. would go here.
 
 end module point_module

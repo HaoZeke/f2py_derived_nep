@@ -15,13 +15,13 @@ void point_capsule_destructor(PyObject* capsule) {
     destroy_point(p);
 }
 
-// Python wrapper for the Point class
+/* Python wrapper for the Point class */
 typedef struct {
     PyObject_HEAD
     PyObject* capsule; // Capsule containing the Point pointer
 } PyPoint;
 
-// Methods of the Point class
+/* Methods of the Point class */
 static void PyPoint_dealloc(PyPoint* self) {
     /* Decrement the reference count of the capsule */
     Py_XDECREF(self->capsule);
@@ -49,7 +49,7 @@ static PyObject* PyPoint_new(PyTypeObject* type, PyObject* args, PyObject* kwds)
     return (PyObject*)self;
 }
 
-// Getter for x
+/* Getter for x */
 static PyObject* PyPoint_getx(PyPoint* self, void* closure) {
     Point* p = (Point*) PyCapsule_GetPointer(self->capsule, "point._Point");
     if (!p) {
@@ -60,7 +60,7 @@ static PyObject* PyPoint_getx(PyPoint* self, void* closure) {
     return PyFloat_FromDouble(x);
 }
 
-// Setter for x
+/* Setter for x */
 static int PyPoint_setx(PyPoint* self, PyObject* value, void* closure) {
     if (value == NULL) {
         PyErr_SetString(PyExc_TypeError, "Cannot delete the x attribute");
@@ -80,7 +80,7 @@ static int PyPoint_setx(PyPoint* self, PyObject* value, void* closure) {
     return 0;
 }
 
-// Getter for y
+/* Getter for y */
 static PyObject* PyPoint_gety(PyPoint* self, void* closure) {
     Point* p = (Point*) PyCapsule_GetPointer(self->capsule, "point._Point");
     if (!p) {
@@ -91,7 +91,7 @@ static PyObject* PyPoint_gety(PyPoint* self, void* closure) {
     return PyFloat_FromDouble(y);
 }
 
-// Setter for y
+/* Setter for y */
 static int PyPoint_sety(PyPoint* self, PyObject* value, void* closure) {
     if (value == NULL) {
         PyErr_SetString(PyExc_TypeError, "Cannot delete the y attribute");
@@ -112,14 +112,14 @@ static int PyPoint_sety(PyPoint* self, PyObject* value, void* closure) {
 }
 
 
-// Define getters and setters
+/* Define getters and setters */
 static PyGetSetDef PyPoint_getsetters[] = {
     {"x", (getter)PyPoint_getx, (setter)PyPoint_setx, "x coordinate", NULL},
     {"y", (getter)PyPoint_gety, (setter)PyPoint_sety, "y coordinate", NULL},
     {NULL}  /* Sentinel */
 };
 
-// Define the Python type object for Point
+/* Define the Python type object for Point */
 static PyTypeObject PyPointType = {
     PyVarObject_HEAD_INIT(NULL, 0)
     .tp_name = "point.Point",             /* tp_name */
@@ -131,13 +131,13 @@ static PyTypeObject PyPointType = {
     .tp_new = PyPoint_new               /* tp_new */
 };
 
-// Module method definitions
+/* Module method definitions */
 static PyMethodDef point_methods[] = {
-    // Method definitions would go here, if there are any global functions
+    /* Method definitions would go here, if there are any global functions */
     {NULL, NULL, 0, NULL}  /* Sentinel */
 };
 
-// Module definition
+/* Module definition */
 static struct PyModuleDef pointmodule = {
     PyModuleDef_HEAD_INIT,
     "point",   /* name of module */
@@ -146,7 +146,7 @@ static struct PyModuleDef pointmodule = {
     point_methods
 };
 
-// Module initialization function
+/* Module initialization function */
 PyMODINIT_FUNC PyInit_point(void) {
     PyObject* m;
 

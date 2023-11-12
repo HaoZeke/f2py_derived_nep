@@ -16,7 +16,8 @@ void point_capsule_destructor(PyObject *capsule) {
 
 /* Point object definition */
 typedef struct {
-  PyObject_HEAD PyObject *capsule;
+  PyObject_HEAD
+  PyObject *capsule;
 } PyPointObject;
 
 /* Deallocates the PyPointObject */
@@ -25,7 +26,7 @@ static void PyPoint_dealloc(PyPointObject *self) {
   Py_TYPE(self)->tp_free((PyObject *)self);
 }
 
-// Creates a new PyPointObject
+/* Creates a new PyPointObject */
 static PyObject *PyPoint_new(PyTypeObject *type, PyObject *args,
                              PyObject *kwds) {
   double x, y;

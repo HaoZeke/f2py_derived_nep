@@ -9,24 +9,23 @@ module c_wrappers
 contains
 
    ! Wrapper for creating a new point
-   function c_new_point(x, y) bind(C, name="c_new_point")
+   function c_new_point(x, y) result(cnewpt) bind(c)
       real(c_double), value :: x, y
-      type(c_ptr) :: c_new_point
+      type(c_ptr) :: cnewpt
       type(Point), pointer :: p
       integer :: stat
-
       call create_point(x, y, p, stat)
       if (stat /= 0) then
          print *, "Allocation failed"
-         c_new_point = C_NULL_PTR
+         cnewpt = C_NULL_PTR
          return
       end if
 
-      c_new_point = c_loc(p)
+      cnewpt = c_loc(p)
    end function c_new_point
 
    ! Wrapper to set the x value of a point
-   subroutine c_set_x(p_cptr, x) bind(c, name='c_set_x')
+   subroutine c_set_x(p_cptr, x) bind(c)
       type(c_ptr), intent(in) :: p_cptr
       real(c_double), intent(in), value :: x
       type(Point), pointer :: p
@@ -36,7 +35,7 @@ contains
    end subroutine c_set_x
 
    ! Wrapper to get the x value of a point
-   function c_get_x(p_cptr) bind(c, name='c_get_x') result(x)
+   function c_get_x(p_cptr) bind(c) result(x)
       type(c_ptr), intent(in) :: p_cptr
       real(c_double) :: x
       type(Point), pointer :: p

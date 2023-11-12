@@ -1,7 +1,4 @@
-import pytest
-
 from point import Point
-
 
 def test_point():
     p = Point(1, 2)

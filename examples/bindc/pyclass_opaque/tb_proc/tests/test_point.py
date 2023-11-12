@@ -1,7 +1,4 @@
-import pytest
-
 from point import Point
-
 
 def test_point():
     p = Point(1, 2)
@@ -9,12 +6,10 @@ def test_point():
     assert p.y == 2
     assert p != Point(1, 2)
 
-
 def test_point_euclid():
     p = Point(1, 2)
     p2 = Point(2, 5)
     assert p.euclidean_distance(p2) == 3.1622776601683795
-
 
 def test_fails():
     p = Point(1, 2)
