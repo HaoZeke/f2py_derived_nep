@@ -5,6 +5,8 @@ module matrix_mod
     integer :: rows
     integer :: cols
     real(8), allocatable :: data(:,:)
+    contains
+      procedure, pass(self) :: get_row
   end type matrix_type
 
 contains
@@ -17,6 +19,7 @@ contains
       m%rows = rows
       m%cols = cols
       allocate(m%data(rows, cols))
+      m%data = 0.0
   end subroutine create_matrix
 
   subroutine destroy_matrix(m)
@@ -35,6 +38,8 @@ contains
     integer, intent(in) :: row
     real(8), intent(in) :: rowData(:)
 
+    print *, "Row is ", row
+    print *, "Row data is ", rowData
     if (row < 1 .or. row > m%rows) then
       print *, "Error: Row index out of bounds."
       return
@@ -48,22 +53,23 @@ contains
     m%data(row, :) = rowData
   end subroutine set_row
 
-  subroutine get_row(m, row, rowData)
-    type(matrix_type), intent(in) :: m
+  subroutine get_row(self, row, rowData)
+    class(matrix_type), intent(in) :: self
     integer, intent(in) :: row
     real(8), intent(out) :: rowData(:)
 
-    if (row < 1 .or. row > m%rows) then
+    print *, "Row is ", row
+    if (row < 1 .or. row > self%rows) then
       print *, "Error: Row index out of bounds."
       return
     endif
 
-    if (size(rowData) /= m%cols) then
+    if (size(rowData) /= self%cols) then
       print *, "Error: Output row data size does not match number of columns."
       return
     endif
 
-    rowData = m%data(row, :)
+    rowData = self%data(row, :)
   end subroutine get_row
 
   subroutine set_column(m, col, colData)

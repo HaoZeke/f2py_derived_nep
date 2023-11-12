@@ -33,15 +33,17 @@ contains
      mat_cptr = c_null_ptr
    end subroutine c_destroy_matrix
 
-  subroutine c_set_row(mat_cptr, row, row_data) bind(C)
-    type(c_ptr), intent(in) :: mat_cptr
-    integer(c_int), intent(in), value :: row
-    real(c_double), intent(in) :: row_data(:)
-    type(matrix_type), pointer :: m
-
-    call c_f_pointer(mat_cptr, m)
-    call set_row(m, row, row_data)
-  end subroutine c_set_row
+   ! XXX: As written, copies for set operations are unavoidable, due to the
+   ! underlying type not being C interoperable. For ISO_C_BINDING, we could use
+   ! a separate hotpath, but this is more general.
+   subroutine c_set_row(mat_cptr, row, row_data) bind(C)
+     type(c_ptr), intent(in) :: mat_cptr
+     integer(c_int), intent(in), value :: row
+     real(c_double), intent(in) :: row_data(:)
+     type(matrix_type), pointer :: m
+     call c_f_pointer(mat_cptr, m)
+     call set_row(m, row, row_data)
+   end subroutine c_set_row
 
   subroutine c_set_column(mat_cptr, col, col_data) bind(C)
     type(c_ptr), intent(in) :: mat_cptr
@@ -60,7 +62,7 @@ contains
     type(matrix_type), pointer :: m
 
     call c_f_pointer(mat_cptr, m)
-    call get_row(m, row, row_data)
+    call m%get_row(row, row_data)
   end subroutine c_get_row
 
   subroutine c_get_column(mat_cptr, col, col_data) bind(C)
