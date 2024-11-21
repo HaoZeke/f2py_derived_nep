@@ -1,3 +1,4 @@
+import pytest
 from point import Point
 
 def test_point():
