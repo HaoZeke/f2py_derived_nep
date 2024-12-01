@@ -1,0 +1,12 @@
+* About
+** Usage
+#+begin_src bash
+pixi shell
+meson setup bbdir
+meson compile -C bbdir
+export PYTHONPATH=$PYTHONPATH:$(pwd)/bbdir
+pytest
+./bbdir/ctestf
+./bbdir/ftest
+./bbdir/ftest_cwrap
+#+end_src
